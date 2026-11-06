@@ -18,7 +18,7 @@
 # GB_RANGE_MAX_RETRIES RETRY rows among the last 100 journal rows (~50 slices
 # or more) stop the run as flaky hardware.
 #
-# Usage (from the goldbach-l0-tidy root; plain bash, works from a TTY):
+# Usage (from the goldbach-l0 root; plain bash, works from a TTY):
 #   bash tools/run_range.sh START LIMIT [SLICE] [JOURNAL]
 #   bash tools/run_range.sh 4000000000000000000 5000000000000000000
 # defaults: SLICE=200000000000000 (2e14, ~25 min at ~65 G evens/s; production
@@ -54,7 +54,7 @@ set -u
 # Segment span: v1.12.0's optimum (425M, mod-30 class map). v1.11.0 was
 # tuned at 350M, older builds at 250M (GB_RANGE_SEGMENT=N).
 SEG=${GB_RANGE_SEGMENT:-467500000}
-cd "$(dirname "$(readlink -f "$0")")/../goldbach-l0-tidy" 2>/dev/null || cd "$(dirname "$0")/.." || exit 1
+cd "$(dirname "$(readlink -f "$0")")/../goldbach-l0" 2>/dev/null || cd "$(dirname "$0")/.." || exit 1
 
 START=${1:?usage: run_range.sh START LIMIT [SLICE] [JOURNAL]}
 LIMIT=${2:?usage: run_range.sh START LIMIT [SLICE] [JOURNAL]}
@@ -75,7 +75,7 @@ die() { echo "FATAL: $*" | tee -a "$LOG" >&2; exit 1; }
 if [ -n "${GB_RANGE_BIN:-}" ]; then BIN=$GB_RANGE_BIN
 elif [ -x ci-state/active/goldbach_l0 ]; then BIN=ci-state/active/goldbach_l0
 else BIN=./build/goldbach_l0; fi
-[ -x "$BIN" ] || die "$BIN not found (run from the goldbach-l0-tidy root, build first)"
+[ -x "$BIN" ] || die "$BIN not found (run from the goldbach-l0 root, build first)"
 BIN=$(readlink -f "$BIN")
 BINDIR=$(dirname "$BIN")
 SPV=${GB_RANGE_SPV:-}

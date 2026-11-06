@@ -8,7 +8,7 @@ are discarded. While each run executes, a sampler records the B580's actual
 clock, package temperature and throttle state, and the card energy counter
 gives average power and energy per billion evens.
 
-Rows are APPENDED to a CSV (default: <tidy>/bench/bench-results.csv) using the
+Rows are APPENDED to a CSV (default: <goldbach-l0>/bench/bench-results.csv) using the
 sweep-results.csv schema first —
   timestamp,segment,split,run,status,gpu_s,sieve_s,large_s,check_s,
   offsets_s,sync_s,evens_per_sec,wall_s,detail
@@ -50,9 +50,9 @@ import time
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
-TIDY = (TOOLS / ".." / "goldbach-l0-tidy").resolve()
-if not (TIDY / "build" / "goldbach_l0").exists():   # invoked via the tidy/tools symlink
-    TIDY = Path.cwd()
+L0_ROOT = (TOOLS / ".." / "goldbach-l0").resolve()
+if not (L0_ROOT / "build" / "goldbach_l0").exists():   # invoked via the goldbach-l0/tools symlink
+    L0_ROOT = Path.cwd()
 
 PRESET_WINDOWS = {
     "long":   (4000000000000000000, 4000000100000000000),   # 1e11 (235 segments at 425M)
@@ -267,7 +267,7 @@ def parse_window(spec):
     return name, (int(a), int(b))
 
 
-def git_commit(repo=TIDY):
+def git_commit(repo=L0_ROOT):
     try:
         head = subprocess.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"],
                               capture_output=True, text=True, timeout=5).stdout.strip()
@@ -300,7 +300,7 @@ def run_once(arm, wname, window, segment, split, timeout):
     with Sampler() as smp:
         t0 = time.perf_counter()
         try:
-            p = subprocess.run(cmd, cwd=TIDY, env=env, capture_output=True, text=True,
+            p = subprocess.run(cmd, cwd=L0_ROOT, env=env, capture_output=True, text=True,
                                timeout=timeout)
             rc, out, err = p.returncode, p.stdout, p.stderr
         except subprocess.TimeoutExpired:
@@ -488,12 +488,12 @@ def main():
                     help="segment span for every arm (default 0: each binary's own "
                          "default; an arm's SEGMENT=N overrides)")
     ap.add_argument("--split", type=int, default=0)
-    ap.add_argument("--bin", default=str(TIDY / "build" / "goldbach_l0"))
+    ap.add_argument("--bin", default=str(L0_ROOT / "build" / "goldbach_l0"))
     ap.add_argument("--spv", default="", help="default --spv for all arms")
     ap.add_argument("--cooldown", type=float, default=0.0, help="seconds to sleep between runs")
     ap.add_argument("--timeout", type=float, default=900.0)
     ap.add_argument("--ref", default=None, help="reference arm for paired ratios (default: first)")
-    ap.add_argument("--out", default=str(TIDY / "bench" / "bench-results.csv"))
+    ap.add_argument("--out", default=str(L0_ROOT / "bench" / "bench-results.csv"))
     ap.add_argument("--force", action="store_true", help="run even if the pre-flight check fails")
     ap.add_argument("--target-ci", type=float, default=None, metavar="PCT",
                     help="after --runs rounds, keep adding rounds until every arm mean and every "
@@ -571,7 +571,7 @@ def main():
                 pairs.reverse()
             for wn, win, arm in pairs:
                 row = run_once(arm, wn, win, a.segment, a.split, a.timeout)
-                # The tidy HEAD only describes the default binary; another
+                # The goldbach-l0 HEAD only describes the default binary; another
                 # binary gets the commit of the checkout it was built in
                 # (<checkout>/build/goldbach_l0), else is recorded as external.
                 row.update(commit=commit if arm["bin"] == a.bin else arm_commit[arm["name"]],

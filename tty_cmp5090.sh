@@ -16,7 +16,7 @@
 #   - fresh process per run, per-run timeout (hang -> TIMEOUT, not a stall)
 #   - appends one row per run to the journal; medians + CV + ratio summary
 #
-# Usage (from the tidy root, as your normal user):
+# Usage (from the goldbach-l0 root, as your normal user):
 #   bash tools/tty_cmp5090.sh                 # full suite: 1e9..1e12, 1e14
 #   bash tools/tty_cmp5090.sh 12 14           # subset by exponent
 #   bash tools/tty_cmp5090.sh 9 10 11 12      # his table rows only (fast)
@@ -25,9 +25,9 @@
 # Journal: compare-5090-same-range.csv (append-only; created if missing)
 set -u
 
-REPO=${GB_REPO:-$(dirname "$(readlink -f "$0")")/../goldbach-l0-tidy}
+REPO=${GB_REPO:-$(dirname "$(readlink -f "$0")")/../goldbach-l0}
 [ -x "$REPO/build/goldbach_l0" ] || REPO=$PWD
-[ -x "$REPO/build/goldbach_l0" ] || { echo "FATAL: build/goldbach_l0 not found (run from the tidy root, or set GB_REPO)" >&2; exit 1; }
+[ -x "$REPO/build/goldbach_l0" ] || { echo "FATAL: build/goldbach_l0 not found (run from the goldbach-l0 root, or set GB_REPO)" >&2; exit 1; }
 cd "$REPO" || exit 1
 
 BIN=./build/goldbach_l0

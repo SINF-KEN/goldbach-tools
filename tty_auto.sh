@@ -13,13 +13,13 @@
 # running. It does the work and ALWAYS restores graphical.target (EXIT trap
 # + a hard time ceiling) so a hang cannot strand you.
 #
-# Usage (from the tidy root, ONE command):
+# Usage (from the goldbach-l0 root, ONE command):
 #   sudo bash tools/tty_auto.sh              # full suite 1e9..1e12 + 1e14 (~70 min)
 #   sudo bash tools/tty_auto.sh 9 10 11 12   # his table rows only (~3 min)
 #   sudo bash tools/tty_auto.sh 12 14        # headline rows only (~70 min)
 #
 # Desktop apps WILL be closed when X stops — save your work first.
-# Log: <tidy>/tty-auto.log   Journal: compare-5090-same-range.csv
+# Log: <goldbach-l0>/tty-auto.log   Journal: compare-5090-same-range.csv
 # Worst-case desktop-off window: AUTO_CEIL (default 6.5 h) — a hung suite is
 # killed there and the desktop restored. Manual recovery from a VT (ctrl-alt-f3):
 #   sudo systemctl isolate graphical.target
@@ -29,9 +29,9 @@ DRY=${TTY_AUTO_DRY:-0}
 DMARK=""; DRUN=""
 [ "$DRY" = 1 ] && { DMARK=" (DRY)"; DRUN=" (DRY RUN)"; }
 SELF=$(readlink -f "$0")
-REPO=${GB_REPO:-$(dirname "$SELF")/../goldbach-l0-tidy}
+REPO=${GB_REPO:-$(dirname "$SELF")/../goldbach-l0}
 [ -x "$REPO/build/goldbach_l0" ] || REPO=$PWD
-[ -x "$REPO/build/goldbach_l0" ] || { echo "FATAL: build/goldbach_l0 not found (run from the tidy root or set GB_REPO)" >&2; exit 1; }
+[ -x "$REPO/build/goldbach_l0" ] || { echo "FATAL: build/goldbach_l0 not found (run from the goldbach-l0 root or set GB_REPO)" >&2; exit 1; }
 cd "$REPO" || exit 1
 LOG=$REPO/tty-auto.log
 CEIL=${AUTO_CEIL:-23400}

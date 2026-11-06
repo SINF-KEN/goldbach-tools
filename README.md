@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>Benchmarks, validators and driver bug reproducers for the Goldbach verifier.</b><br>
-  <a href="https://github.com/SINF-KEN/goldbach-l0-tidy">goldbach-l0-tidy</a> ·
+  <a href="https://github.com/SINF-KEN/goldbach-l0">goldbach-l0</a> ·
   <a href="https://github.com/SINF-KEN/goldbach-web">goldbach-web</a> ·
   <a href="https://goldbach.net01.io">Live campaign</a>
 </p>
@@ -11,7 +11,7 @@
   <img src="docs/waterfall-example.png" alt="Timing waterfall produced by waterfall.py" width="720">
 </p>
 
-Clone this next to `goldbach-l0-tidy`, which picks it up through its
+Clone this next to `goldbach-l0`, which picks it up through its
 `tools -> ../goldbach-tools` link and builds the C++ tools with its own CMake project.
 
 Flat layout, ordered roughly by how load-bearing the tool is (benchmarks and
@@ -31,9 +31,9 @@ tools/
 
 | Tool | What it does |
 |---|---|
-| `bench.py` | The benchmark to use. Fresh process per run, rounds interleaved across arms (builds / env settings) and windows (`bench` 2e9 @4e18, `steady` 2e10 @4e18, `end` 2e10 below 5e18, plus `long` 1e11 @4e18 and `long-end` 1e11 below 5e18 for small effects), warm-ups discarded. Records clock, temperature, throttling, energy and **other processes' share of the B580** (`other_gpu_pct`, from xe fdinfo) per run. Prints medians, means with t-based 95% CIs, and paired geometric-mean ratios with CIs and a faster/slower/unresolved verdict. `--target-ci PCT` keeps adding rounds until every CI is within ±PCT% (capped by `--max-runs`/`--max-minutes`); `--exclude-contended PCT` drops runs where other processes used the GPU. Appends to `<tidy>/bench/bench-results.csv`. Stdlib only (TTY-safe). **Does not isolate the campaign statistics files**: set `GB_STATS_STATE`, `GB_STATS_LOG`, `GB_RIDGE_FILE`, `GB_RECORDS_FILE`, `GB_STATS_LIVE` to a scratch directory and `GB_RECORD_HOOK=` when benchmarking next to a campaign. |
+| `bench.py` | The benchmark to use. Fresh process per run, rounds interleaved across arms (builds / env settings) and windows (`bench` 2e9 @4e18, `steady` 2e10 @4e18, `end` 2e10 below 5e18, plus `long` 1e11 @4e18 and `long-end` 1e11 below 5e18 for small effects), warm-ups discarded. Records clock, temperature, throttling, energy and **other processes' share of the B580** (`other_gpu_pct`, from xe fdinfo) per run. Prints medians, means with t-based 95% CIs, and paired geometric-mean ratios with CIs and a faster/slower/unresolved verdict. `--target-ci PCT` keeps adding rounds until every CI is within ±PCT% (capped by `--max-runs`/`--max-minutes`); `--exclude-contended PCT` drops runs where other processes used the GPU. Appends to `<goldbach-l0>/bench/bench-results.csv`. Stdlib only (TTY-safe). **Does not isolate the campaign statistics files**: set `GB_STATS_STATE`, `GB_STATS_LOG`, `GB_RIDGE_FILE`, `GB_RECORDS_FILE`, `GB_STATS_LIVE` to a scratch directory and `GB_RECORD_HOOK=` when benchmarking next to a campaign. |
 | `waterfall.py` | Timing waterfall per date / arm / window from `bench/bench-results.csv` (or `sweep-results.csv`), with run times and window descriptions. Times are normalized to 1e10 integers when windows of different size are plotted together (`--per auto`; `--per none` for raw ms). `--latest` plots only the most recent bench.py session per label and window. Small phases are labelled beside their bar. Needs pandas + matplotlib: `python3 -m venv .venv && .venv/bin/pip install pandas matplotlib`. |
-| `tty_baseline.sh` | Best-quality baseline in one command: `sudo bash tools/tty_baseline.sh [full|quick]` stops the desktop, runs bench.py (bench/steady/end x 12, long/long-end x 40; `quick`: 5 / 10) with the B580 to itself, then restores the desktop by itself (phase 2 runs as a transient systemd service with `IgnoreOnIsolate=yes`, so it survives the session teardown that killed the old setsid launch; EXIT trap + time ceiling). Tables in `<tidy>/tty-baseline-last.txt`, rows appended to `bench/bench-results.csv`. `BASELINE_ARMS` adds interleaved reference builds; `TTY_BASELINE_DRY=1` tests it with the desktop up. |
+| `tty_baseline.sh` | Best-quality baseline in one command: `sudo bash tools/tty_baseline.sh [full|quick]` stops the desktop, runs bench.py (bench/steady/end x 12, long/long-end x 40; `quick`: 5 / 10) with the B580 to itself, then restores the desktop by itself (phase 2 runs as a transient systemd service with `IgnoreOnIsolate=yes`, so it survives the session teardown that killed the old setsid launch; EXIT trap + time ceiling). Tables in `<goldbach-l0>/tty-baseline-last.txt`, rows appended to `bench/bench-results.csv`. `BASELINE_ARMS` adds interleaved reference builds; `TTY_BASELINE_DRY=1` tests it with the desktop up. |
 | `live_stats.sh` | Live dashboard for a `run_range.sh` campaign in a second terminal: `bash tools/live_stats.sh START LIMIT [JOURNAL] [INTERVAL_S]`. Progress, rate and ETA from the journal plus the running verifier's per-segment stderr feed (sparse and dense formats), GPU clock / temperature / power from sysfs. Read-only. |
 | `run_range.sh` | Production runner: slices [START, LIMIT] into fresh processes, journals every PASS, resumes after the last contiguous PASS, retries once then stops on failure, `GB_BUCKET_VERIFY=100` tripwire. |
 | `sweep.py` | Segment/split parameter sweeps. Every sample is a **fresh** `goldbach_l0` process (no state leaks, one crash can't poison the next point); appends to `sweep-results.csv` and prints medians with CV%. |

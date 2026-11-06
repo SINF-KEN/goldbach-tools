@@ -3,7 +3,7 @@
 # The GPU tools (validators, benchmarks) can only run on the B580 box; here
 # every script is syntax-checked, bench.py's CLI is smoke-tested, and
 # waterfall.py renders the figures from a fixture journal (uploaded as an
-# artifact). The C++ tools are built by the goldbach-l0-tidy CMake project —
+# artifact). The C++ tools are built by the goldbach-l0 CMake project —
 # see the optional "full" job.
 name: CI
 
@@ -60,8 +60,8 @@ jobs:
           path: out/*.png
 
   full:
-    # Builds the C++ tools inside the goldbach-l0-tidy project.
-    name: Build C++ tools with goldbach-l0-tidy
+    # Builds the C++ tools inside the goldbach-l0 project.
+    name: Build C++ tools with goldbach-l0
     runs-on: ubuntu-24.04
     env:
       ZE_VER: 1.32.0
@@ -72,8 +72,8 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: SINF-KEN/goldbach-l0-tidy
-          path: goldbach-l0-tidy
+          repository: SINF-KEN/goldbach-l0
+          path: goldbach-l0
 
       - name: Install Level Zero headers + loader
         run: |
@@ -83,7 +83,7 @@ jobs:
           sudo apt-get install -y -qq cmake g++ ./libze1_*.deb ./libze-dev_*.deb
 
       - name: Build every target (shipped SPIR-V, no ocloc needed)
-        working-directory: goldbach-l0-tidy
+        working-directory: goldbach-l0
         run: |
           test -f tools/bench.py   # tools -> ../goldbach-tools symlink resolves
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release

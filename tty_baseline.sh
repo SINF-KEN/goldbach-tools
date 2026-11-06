@@ -14,7 +14,7 @@
 # benchmark as your user, and ALWAYS restores graphical.target (EXIT trap + a
 # hard time ceiling), so a hang cannot strand you without a desktop.
 #
-# Usage (from anywhere; the tidy tree is found next to this repo):
+# Usage (from anywhere; the goldbach-l0 tree is found next to this repo):
 #   sudo bash tools/tty_baseline.sh                # current build, full baseline (~25 min)
 #   sudo bash tools/tty_baseline.sh quick          # 5 short + 10 long runs (~8 min)
 #   sudo BASELINE_ARMS="v1.10.0:@/path/goldbach_l0@/path/goldbach_bmg.spv" \
@@ -24,9 +24,9 @@
 #   1. windows bench,steady,end   x RUNS_SHORT (12; quick: 5)
 #   2. windows long,long-end      x RUNS_LONG  (40; quick: 10)
 # The current build's arm is labeled with its version (include/config.hpp).
-# Rows are appended to <tidy>/bench/bench-results.csv (bench.py's journal). The
-# tables bench.py prints land in <tidy>/tty-baseline-last.txt — read that when
-# you are back; the full log is <tidy>/tty-baseline.log.
+# Rows are appended to <goldbach-l0>/bench/bench-results.csv (bench.py's journal). The
+# tables bench.py prints land in <goldbach-l0>/tty-baseline-last.txt — read that when
+# you are back; the full log is <goldbach-l0>/tty-baseline.log.
 #
 # Knobs (env): RUNS_SHORT, RUNS_LONG, WINDOWS_SHORT, WINDOWS_LONG,
 #   BASELINE_ARMS (extra bench.py --arm specs, space-separated), BASELINE_OUT
@@ -41,9 +41,9 @@ set -u
 
 DRY=${TTY_BASELINE_DRY:-0}
 SELF=$(readlink -f "$0")
-REPO=${GB_REPO:-$(dirname "$SELF")/../goldbach-l0-tidy}
+REPO=${GB_REPO:-$(dirname "$SELF")/../goldbach-l0}
 [ -x "$REPO/build/goldbach_l0" ] || REPO=$PWD
-[ -x "$REPO/build/goldbach_l0" ] || { echo "FATAL: build/goldbach_l0 not found (run from the tidy root or set GB_REPO)" >&2; exit 1; }
+[ -x "$REPO/build/goldbach_l0" ] || { echo "FATAL: build/goldbach_l0 not found (run from the goldbach-l0 root or set GB_REPO)" >&2; exit 1; }
 REPO=$(readlink -f "$REPO")
 cd "$REPO" || exit 1
 LOG=$REPO/tty-baseline.log
