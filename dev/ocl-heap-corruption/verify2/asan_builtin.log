@@ -1,0 +1,63 @@
+=== Rusticl warning: Patched Mesa libclc not detected. Upstream libclc may contain known bugs or breaking changes and isn't guaranteed to work reliably. Please visit https://gitlab.freedesktop.org/karolherbst/mesa-libclc for more information. ===
+build OK
+S1 start
+S1 buf ok
+  run2 k_clz: create kernel
+  run2 k_clz: create ob
+  run2 k_clz: set args
+  run2 k_clz: enqueue
+  run2 k_clz: read
+  run2 k_clz: release
+  run2 k_clz: done
+=================================================================
+==41796==ERROR: AddressSanitizer: unknown-crash on address 0x7bf2313f03a0 at pc 0x55868616429e bp 0x7ffda7987520 sp 0x7ffda7987510
+READ of size 8 at 0x7bf2313f03a0 thread T0
+    #0 0x55868616429d in std::vector<unsigned long, std::allocator<unsigned long> >::data() /usr/include/c++/16/bits/stl_vector.h:1386
+    #1 0x55868616429d in operator() ../builtin64_test.cpp:92
+    #2 0x55868615f752 in main ../builtin64_test.cpp:117
+    #3 0x7ff233627c8d  (/usr/lib/libc.so.6+0x27c8d) (BuildId: 46554afd5282a7de42075035b9bdaac8968c6e03)
+    #4 0x7ff233627dca in __libc_start_main (/usr/lib/libc.so.6+0x27dca) (BuildId: 46554afd5282a7de42075035b9bdaac8968c6e03)
+    #5 0x558686163214 in _start (/home/ken/coding/goldbach-tools/dev/ocl-heap-corruption/verify2/builtin64_asan+0x8214) (BuildId: 0b83f8cfb68930d3af8a0a841766084c3f783158)
+
+Address 0x7bf2313f03a0 is located in stack of thread T0 at offset 32 in frame
+    #0 0x558686163e4f in operator() ../builtin64_test.cpp:80
+
+  This frame has 3 object(s):
+    [32, 40) 'ob' (line 84) <== Memory access at offset 32 is inside this variable
+    [64, 72) 'in' (line 80)
+    [96, 104) 'n' (line 80)
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: unknown-crash ../builtin64_test.cpp:92 in operator()
+Shadow bytes around the buggy address:
+  0x7bf2313f0100: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f3 f3 f3 f3
+  0x7bf2313f0180: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f3 f3 f3 f3
+  0x7bf2313f0200: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f3 f3 f3 f3
+  0x7bf2313f0280: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f3 f3 f3 f3
+  0x7bf2313f0300: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f3 f3 f3 f3
+=>0x7bf2313f0380: f1 f1 f1 f1[00]f2 f2 f2 00 f2 f2 f2 00 f3 f3 f3
+  0x7bf2313f0400: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f3 f3 f3 f3
+  0x7bf2313f0480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7bf2313f0500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7bf2313f0580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7bf2313f0600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==41796==ABORTING

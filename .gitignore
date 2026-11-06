@@ -1,0 +1,18 @@
+# Compiled host executables from the dev/ probes (sources are tracked)
+dev/l0-metric-enum/zet_enum
+dev/l0-metric-enum/zet_stream
+dev/l0-metric-enum/zet_query
+dev/l0-metric-enum/zet_tracer
+dev/l0-metric-enum/subdev
+dev/l0-visibility-test/vis_test
+dev/ocl-heap-corruption/attach/builtin64
+dev/ocl-heap-corruption/verify2/builtin64
+dev/ocl-heap-corruption/verify2/builtin64_asan
+dev/ocl-heap-corruption/verify2/issue_abr
+dev/ocl-heap-corruption/verify2/issue_abr_asan
+dev/ocl-heap-corruption/verify2/merge2
+dev/ocl-heap-corruption/verify2/merge_div
+dev/ocl-heap-corruption/verify2/mk6
+dev/ocl-heap-corruption/verify2/nodiv
+.venv/
+__pycache__/

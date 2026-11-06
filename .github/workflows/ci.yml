@@ -1,0 +1,91 @@
+# CI for goldbach-tools — checks that need no GPU.
+#
+# The GPU tools (validators, benchmarks) can only run on the B580 box; here
+# every script is syntax-checked, bench.py's CLI is smoke-tested, and
+# waterfall.py renders the figures from a fixture journal (uploaded as an
+# artifact). The C++ tools are built by the goldbach-l0-tidy CMake project —
+# see the optional "full" job.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scripts:
+    name: Scripts and plotting
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python syntax
+        run: python -m py_compile *.py
+
+      - name: Shell syntax
+        run: for f in *.sh; do bash -n "$f" && echo "ok $f"; done
+
+      - name: bench.py CLI (stdlib only, no GPU needed for --help)
+        run: python bench.py --help | head -20
+
+      - name: Install plotting deps
+        run: pip install -q pandas matplotlib
+
+      - name: Render waterfalls from the fixture journal
+        run: |
+          mkdir -p out
+          F=tests/fixtures/bench-sample.csv
+          python waterfall.py "$F" --window steady --group-by label -o out/steady-by-label.png
+          python waterfall.py "$F" --label final --group-by window  -o out/final-by-window.png
+          python waterfall.py "$F" --window bench --label final     -o out/bench-daily.png
+          for p in out/*.png; do test -s "$p" || { echo "::error::empty $p"; exit 1; }; done
+
+      - name: Guard refuses to average different windows
+        run: |
+          if python waterfall.py tests/fixtures/bench-sample.csv -o out/should-not-exist.png; then
+            echo "::error::waterfall.py averaged rows from several windows"; exit 1
+          fi
+          test ! -e out/should-not-exist.png
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: waterfall-figures
+          path: out/*.png
+
+  full:
+    # Builds the C++ tools inside the goldbach-l0-tidy project.
+    name: Build C++ tools with goldbach-l0-tidy
+    runs-on: ubuntu-24.04
+    env:
+      ZE_VER: 1.32.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: goldbach-tools
+
+      - uses: actions/checkout@v4
+        with:
+          repository: SINF-KEN/goldbach-l0-tidy
+          path: goldbach-l0-tidy
+
+      - name: Install Level Zero headers + loader
+        run: |
+          ZE=https://github.com/oneapi-src/level-zero/releases/download/v$ZE_VER
+          wget -q "$ZE/libze1_${ZE_VER}+u24.04_amd64.deb" "$ZE/libze-dev_${ZE_VER}+u24.04_amd64.deb"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq cmake g++ ./libze1_*.deb ./libze-dev_*.deb
+
+      - name: Build every target (shipped SPIR-V, no ocloc needed)
+        working-directory: goldbach-l0-tidy
+        run: |
+          test -f tools/bench.py   # tools -> ../goldbach-tools symlink resolves
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j"$(nproc)"
+          ls build | grep -vE 'CMake|cmake|Makefile'

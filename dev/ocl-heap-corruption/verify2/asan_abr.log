@@ -1,0 +1,190 @@
+=== Rusticl warning: Patched Mesa libclc not detected. Upstream libclc may contain known bugs or breaking changes and isn't guaranteed to work reliably. Please visit https://gitlab.freedesktop.org/karolherbst/mesa-libclc for more information. ===
+build OK
+readback: 15/15 correct
+released cleanly
+
+=================================================================
+==41832==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 528 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448057669b  (/usr/lib/intel-opencl/libigdrcl.so+0x37669b) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b44803e35f6  (/usr/lib/intel-opencl/libigdrcl.so+0x1e35f6) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b44803e426a  (/usr/lib/intel-opencl/libigdrcl.so+0x1e426a) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #4 0x7b44803e6267  (/usr/lib/intel-opencl/libigdrcl.so+0x1e6267) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #5 0x7b448034690b  (/usr/lib/intel-opencl/libigdrcl.so+0x14690b) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #6 0x7f44873dbe90 in clCreateBuffer (/usr/lib/libOpenCL.so.1+0x16e90) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 37521 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c541 in operator new[](unsigned long, std::nothrow_t const&) (/usr/lib/libasan.so.8+0x18c541) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44808ee5e6  (/usr/lib/intel-opencl/libigdrcl.so+0x6ee5e6) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 37520 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c241 in operator new[](unsigned long) (/usr/lib/libasan.so.8+0x18c241) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44803ecc34  (/usr/lib/intel-opencl/libigdrcl.so+0x1ecc34) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b44803ef990  (/usr/lib/intel-opencl/libigdrcl.so+0x1ef990) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b448035363b  (/usr/lib/intel-opencl/libigdrcl.so+0x15363b) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #4 0x7f44873dd786 in clBuildProgram (/usr/lib/libOpenCL.so.1+0x18786) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 15680 byte(s) in 8 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448098b05f  (/usr/lib/intel-opencl/libigdrcl.so+0x78b05f) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b44809817ed  (/usr/lib/intel-opencl/libigdrcl.so+0x7817ed) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b4480969ff9  (/usr/lib/intel-opencl/libigdrcl.so+0x769ff9) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #4 0x7b448094ee5f  (/usr/lib/intel-opencl/libigdrcl.so+0x74ee5f) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 3696 byte(s) in 8 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480978820  (/usr/lib/intel-opencl/libigdrcl.so+0x778820) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448097b880  (/usr/lib/intel-opencl/libigdrcl.so+0x77b880) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b448092bcaa  (/usr/lib/intel-opencl/libigdrcl.so+0x72bcaa) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 1416 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448033fcda  (/usr/lib/intel-opencl/libigdrcl.so+0x13fcda) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 1152 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480893b52  (/usr/lib/intel-opencl/libigdrcl.so+0x693b52) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 1024 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44804047cd  (/usr/lib/intel-opencl/libigdrcl.so+0x2047cd) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 920 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448035bd57  (/usr/lib/intel-opencl/libigdrcl.so+0x15bd57) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7f44873dd142 in clCreateProgramWithSource (/usr/lib/libOpenCL.so.1+0x18142) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 656 byte(s) in 16 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892084  (/usr/lib/intel-opencl/libigdrcl.so+0x692084) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 656 byte(s) in 16 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44803401db  (/usr/lib/intel-opencl/libigdrcl.so+0x1401db) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 440 byte(s) in 9 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448033ff3a  (/usr/lib/intel-opencl/libigdrcl.so+0x13ff3a) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 352 byte(s) in 2 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x0000007a7462  (<unknown module>)
+
+Indirect leak of 328 byte(s) in 8 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448033f31c  (/usr/lib/intel-opencl/libigdrcl.so+0x13f31c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b4480892ac3  (/usr/lib/intel-opencl/libigdrcl.so+0x692ac3) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 328 byte(s) in 8 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448033f31c  (/usr/lib/intel-opencl/libigdrcl.so+0x13f31c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480407a09  (/usr/lib/intel-opencl/libigdrcl.so+0x207a09) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448035bd73  (/usr/lib/intel-opencl/libigdrcl.so+0x15bd73) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7f44873dd142 in clCreateProgramWithSource (/usr/lib/libOpenCL.so.1+0x18142) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 224 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448092edad  (/usr/lib/intel-opencl/libigdrcl.so+0x72edad) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fce5  (/usr/lib/intel-opencl/libigdrcl.so+0x74fce5) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 192 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892f78  (/usr/lib/intel-opencl/libigdrcl.so+0x692f78) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x69685f64616c  (<unknown module>)
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x0000007a6c62  (<unknown module>)
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x690072687372  (<unknown module>)
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x696800726872  (<unknown module>)
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x6968006c6872  (<unknown module>)
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x69685f64616c  (<unknown module>)
+
+Indirect leak of 176 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480892876  (/usr/lib/intel-opencl/libigdrcl.so+0x692876) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448094fb9c  (/usr/lib/intel-opencl/libigdrcl.so+0x74fb9c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x69685f6c756c  (<unknown module>)
+
+Indirect leak of 152 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480898ae4  (/usr/lib/intel-opencl/libigdrcl.so+0x698ae4) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 104 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44803c1011  (/usr/lib/intel-opencl/libigdrcl.so+0x1c1011) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 64 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448098c211  (/usr/lib/intel-opencl/libigdrcl.so+0x78c211) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b44809817ed  (/usr/lib/intel-opencl/libigdrcl.so+0x7817ed) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b4480969ff9  (/usr/lib/intel-opencl/libigdrcl.so+0x769ff9) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #4 0x7b448094ee5f  (/usr/lib/intel-opencl/libigdrcl.so+0x74ee5f) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 56 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44803ec044  (/usr/lib/intel-opencl/libigdrcl.so+0x1ec044) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448040641c  (/usr/lib/intel-opencl/libigdrcl.so+0x20641c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b448035bd73  (/usr/lib/intel-opencl/libigdrcl.so+0x15bd73) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #4 0x7f44873dd142 in clCreateProgramWithSource (/usr/lib/libOpenCL.so.1+0x18142) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 41 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448033f31c  (/usr/lib/intel-opencl/libigdrcl.so+0x13f31c) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7618154d80372aff  (<unknown module>)
+    #3 0x951f1515706c6ab1  (<unknown module>)
+
+Indirect leak of 34 byte(s) in 2 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44808920b4  (/usr/lib/intel-opencl/libigdrcl.so+0x6920b4) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b4480899984  (/usr/lib/intel-opencl/libigdrcl.so+0x699984) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448040c618  (/usr/lib/intel-opencl/libigdrcl.so+0x20c618) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7b44803ef990  (/usr/lib/intel-opencl/libigdrcl.so+0x1ef990) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #4 0x7b448035363b  (/usr/lib/intel-opencl/libigdrcl.so+0x15363b) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #5 0x7f44873dd786 in clBuildProgram (/usr/lib/libOpenCL.so.1+0x18786) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 16 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b448040791a  (/usr/lib/intel-opencl/libigdrcl.so+0x20791a) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #2 0x7b448035bd73  (/usr/lib/intel-opencl/libigdrcl.so+0x15bd73) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+    #3 0x7f44873dd142 in clCreateProgramWithSource (/usr/lib/libOpenCL.so.1+0x18142) (BuildId: 346be1c2c9ca9f96ef0d376ff913252422000de7)
+
+Indirect leak of 8 byte(s) in 1 object(s) allocated from:
+    #0 0x7f448758c0b1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x18c0b1) (BuildId: 9984d9525c58ce2da97a0c6855b72ef802ee1bbe)
+    #1 0x7b44804126f2  (/usr/lib/intel-opencl/libigdrcl.so+0x2126f2) (BuildId: 9957e44c953d5cabcd48fec83a2b076d372c9388)
+
+SUMMARY: AddressSanitizer: 104420 byte(s) leaked in 101 allocation(s).

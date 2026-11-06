@@ -1,0 +1,12 @@
+=== Rusticl warning: Patched Mesa libclc not detected. Upstream libclc may contain known bugs or breaking changes and isn't guaranteed to work reliably. Please visit https://gitlab.freedesktop.org/karolherbst/mesa-libclc for more information. ===
+build OK
+S1 start
+S1 buf ok
+  run2 k_clz: create kernel
+  run2 k_clz: create ob
+  run2 k_clz: set args
+  run2 k_clz: enqueue
+  run2 k_clz: read
+  run2 k_clz: release
+  run2 k_clz: done
+munmap_chunk(): invalid pointer
