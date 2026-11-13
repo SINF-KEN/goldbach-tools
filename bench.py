@@ -495,6 +495,8 @@ def main():
     ap.add_argument("--ref", default=None, help="reference arm for paired ratios (default: first)")
     ap.add_argument("--out", default=str(L0_ROOT / "bench" / "bench-results.csv"))
     ap.add_argument("--force", action="store_true", help="run even if the pre-flight check fails")
+    ap.add_argument("--preflight-wait", type=float, default=180.0, metavar="S",
+                    help="wait up to S seconds for a running goldbach_l0 to exit before failing pre-flight")
     ap.add_argument("--target-ci", type=float, default=None, metavar="PCT",
                     help="after --runs rounds, keep adding rounds until every arm mean and every "
                          "paired ratio has a 95%% CI half-width <= PCT %% (bounded by --max-runs/--max-minutes)")
@@ -511,7 +513,15 @@ def main():
 
     # ---- pre-flight --------------------------------------------------------
     problems = []
-    running = subprocess.run(["pgrep", "-x", "goldbach_l0"], capture_output=True, text=True).stdout.split()
+    # a goldbach_l0 that exits within --preflight-wait is a short CPU-side run
+    # (e.g. cli_tests of a CI job on the CPU runner), not a GPU job: wait for
+    # it instead of failing the whole A/B. Production slices last minutes.
+    deadline = time.monotonic() + a.preflight_wait
+    while True:
+        running = subprocess.run(["pgrep", "-x", "goldbach_l0"], capture_output=True, text=True).stdout.split()
+        if not running or time.monotonic() >= deadline:
+            break
+        time.sleep(2)
     if running:
         problems.append(f"goldbach_l0 already running (pid {' '.join(running)})")
     disp = display_on_gpu()
