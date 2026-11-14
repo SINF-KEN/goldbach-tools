@@ -3,7 +3,7 @@
 #
 # The range is cut into slices of SLICE integers; each slice is ONE fresh
 # goldbach_l0 process, and every PASSED slice is appended to the journal as
-#   PASS <slice_start> <slice_limit> <iso-ts> <full --csv key=value line> release=<id> [attempts=2]
+#   PASS <slice_start> <slice_limit> <iso-ts> <full --csv key=value line> release=<id> gap_mode=<GB_GAPS> [attempts=2]
 # Re-running the same command resumes after the last contiguous PASS: the
 # journal is checked as an unbroken chain starting at START, so a slice can
 # never be skipped. A failed slice is retried once (transient GPU/driver
@@ -38,7 +38,12 @@
 # refuses to start while any goldbach_l0 process runs.
 #
 # Environment passed through to goldbach_l0 (defaults set here):
-#   GB_BUCKET_VERIFY=100  bucket-sieve tripwire on every 100th segment (~1%)
+#   GB_BUCKET_VERIFY=1000 bucket-sieve tripwire on every 1000th segment (~0.1%;
+#                         100 until 2026-11-14 cost +1.1% GPU time)
+#   GB_GAPS=sampled       prime-gap histogram and moments from the sampled
+#                         segments only (+4.9%); count, sum, tail and the
+#                         largest gap >= 700 stay exact. GB_GAPS=exact walks
+#                         every segment
 #   GB_RANGE_SEGMENT=N    segment span (default 467500000)
 #   GB_RANGE_VERBOSE=1    render the run's per-segment progress as a single
 #                         redrawing progress bar (percent, G ev/s, ETA)
@@ -67,7 +72,8 @@ LOCK=${GB_RANGE_LOCK:-.goldbach-gpu.lock}
 TIMEOUT=${GB_RANGE_TIMEOUT:-0}
 RETRY=${GB_RANGE_RETRY:-1}
 MAXRETRY=${GB_RANGE_MAX_RETRIES:-3}
-export GB_BUCKET_VERIFY=${GB_BUCKET_VERIFY:-100}
+export GB_BUCKET_VERIFY=${GB_BUCKET_VERIFY:-1000}
+export GB_GAPS=${GB_GAPS:-sampled}
 
 die() { echo "FATAL: $*" | tee -a "$LOG" >&2; exit 1; }
 
@@ -245,7 +251,9 @@ while (( next <= LIMIT )); do
         alert "run STOPPED" "slice [$a, $b] failed: ${first_fail:-?} — investigate $LOG"
         exit 1
     fi
-    extra=" release=$RELEASE"
+    # gap_mode: what the slice's gap histogram covers (a recheck re-runs it
+    # the same way; rows without it were walked on every segment)
+    extra=" release=$RELEASE gap_mode=$GB_GAPS"
     if [ -n "$first_fail" ]; then
         # passed only on the second attempt: bank it (the second run is a
         # complete, independent verification) but flag it as a hardware-
