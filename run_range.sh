@@ -82,9 +82,14 @@ SPV=${GB_RANGE_SPV:-}
 [ -z "$SPV" ] && [ -f "$BINDIR/kernels/goldbach_bmg.spv" ] && SPV=$BINDIR/kernels/goldbach_bmg.spv
 SPVARG=()
 if [ "${GB_SPARSE:-0}" = 1 ]; then
-    # the sparse path loads its geometry's module (kernels/sparse*_bmg.spv
-    # relative to this directory); a dense --spv would be the wrong module
-    [ -n "$SPV" ] && echo "note: GB_SPARSE=1 — sparse modules come from ./kernels, not $SPV" >&2
+    # the sparse path loads its geometry's module; a dense --spv would be the
+    # wrong one. Pin the release's own module (M = 30030: sparse30030_bmg.spv,
+    # M = 2310: sparse_bmg.spv) unless GB_SCM_SPV names one: before v2.6 the
+    # binary took ./kernels of the working tree, not its release's.
+    if [ -z "${GB_SCM_SPV:-}" ]; then
+        case "${GB_SCM_M:-30030}" in 2310) sm=sparse_bmg.spv ;; *) sm=sparse${GB_SCM_M:-30030}_bmg.spv ;; esac
+        [ -f "$BINDIR/kernels/$sm" ] && export GB_SCM_SPV=$BINDIR/kernels/$sm
+    fi
 elif [ -n "$SPV" ]; then
     SPVARG=(--spv "$(readlink -f "$SPV")")
 fi
