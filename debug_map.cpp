@@ -221,7 +221,7 @@ int main(int argc, char** argv) {
             // primes >= MED_MIN_P (GB_MED_P overrides) walk prime-parallel;
             // the table holds only the thread-owned columns (stride own_end).
             const u32 mask_count_eff = std::getenv("GB_MAP_NOMASK") ? 0 : 17;
-            u32 med_p = cls ? gb::MED_MIN_P_CLASS : gb::MED_MIN_P;   // as verifier.cpp
+            u32 med_p = gb::MED_MIN_P;   // as verifier.cpp
             if (const char* e = std::getenv("GB_MED_P")) med_p = u32(std::strtoul(e, nullptr, 0));
             const u32 own_end = std::clamp<u32>(u32(std::lower_bound(
                 view.data(), view.data() + split, med_p) - view.data()), mask_count_eff, split);
