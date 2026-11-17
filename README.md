@@ -60,10 +60,9 @@ table/offset math:
 
 ```bash
 ./build/debug_sieve   # make_prime_map alone vs CPU sieve
-./build/debug_check   # make_prime_map + check_numbers vs CPU Goldbach check
 ./build/debug_map     # COMPLETE map: mask path + tile table + large kernel
 ./build/debug_fb      # large-prime first-mark offsets + packed-prime decode vs host
-./build/debug_check_hi  # every checker (two-phase included) in the production geometry
+./build/debug_check_hi  # the mod-30 checker (+ coverage counters) in the production geometry
 ```
 
 The sparse class map (`--sparse`, `kernels/sparse.cl`) has its own validator;
@@ -77,15 +76,13 @@ changing `sparse.cl`, `include/sparse.hpp` or `src/sparse.cpp`:
 GB_SCM_RESTCAP=6 ./build/debug_sparse check 4999999000000000000 4096 60 11   # random map, leftovers
 ```
 
-The bucket sieve spans segments, which none of these see: validate it with
+The hit lists span segments, which none of these see: validate them with
 the verifier itself, `GB_BUCKET_VERIFY=1 ./build/goldbach_l0 --start
 4000000000000000000 --limit 4000000030000000000` (rebuilds every segment's
-map without buckets and compares word for word; throws on any difference).
+map without hit lists and compares word for word; throws on any difference).
 
-Expected output is `OK` / zero diffs. Two caveats:
+Expected output is `OK` / zero diffs. Caveat:
 
-- `debug_check` reports 1 miss at `n=4` — that is *correct*: 4 = 2 + 2 needs
-  the prime 2, which is outside the odd-only candidate list.
 - These tools drive kernels with unusual argument combinations. Only run
   production-shaped configs; a wedged GPU poisons everything measured after it
   (see the gpu-benchmark skill).
