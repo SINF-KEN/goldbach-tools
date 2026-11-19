@@ -15,7 +15,11 @@ sweep-results.csv schema first —
 — followed by extra columns (label, window, start, limit, init_s, total_s,
 leftovers, version, commit, freq_avg_mhz, freq_min_mhz, temp_max_c,
 power_avg_w, energy_j, j_per_gevens, throttled, throttle_reasons,
-display_on_gpu, other_gpu_pct). tools/waterfall.py plots this file.
+display_on_gpu, other_gpu_pct, session, gb_env). gb_env is every GB_* variable
+the run saw (inherited + the arm's own, sorted, comma-separated), so a row says
+which pipeline it measured: GB_SPARSE=1 rows are the sparse path, ~14x the
+dense rate, and must not be compared with dense rows under the same label.
+tools/waterfall.py plots this file.
 
 Precision: per-process noise is ~0.2-0.35% CV, so run count matters more
 than window length beyond ~1e11. --target-ci PCT keeps adding interleaved
@@ -67,7 +71,7 @@ SCHEMA = ["timestamp", "segment", "split", "run", "status", "gpu_s", "sieve_s",
 EXTRA = ["label", "window", "start", "limit", "init_s", "total_s", "leftovers",
          "version", "commit", "freq_avg_mhz", "freq_min_mhz", "temp_max_c",
          "power_avg_w", "energy_j", "j_per_gevens", "throttled",
-         "throttle_reasons", "display_on_gpu", "other_gpu_pct", "session"]
+         "throttle_reasons", "display_on_gpu", "other_gpu_pct", "session", "gb_env"]
 
 
 # ---------------------------------------------------------------- sensors --
@@ -321,6 +325,7 @@ def run_once(arm, wname, window, segment, split, timeout):
         "detail": f"bench label={arm['name']} window={wname}"
                   + ("" if ok else f" rc={rc} err={(err or out).strip()[-160:]!r}"),
         "label": arm["name"], "window": wname, "start": start, "limit": limit,
+        "gb_env": ",".join(f"{k}={v}" for k, v in sorted(env.items()) if k.startswith("GB_")),
         "init_s": r.get("init_s", ""), "total_s": r.get("total_s", ""),
         "leftovers": r.get("leftovers", ""), "version": r.get("version", ""),
         "freq_avg_mhz": f"{st.mean(smp.freqs):.0f}" if smp.freqs else "",
