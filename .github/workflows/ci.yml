@@ -47,6 +47,22 @@ jobs:
           python waterfall.py "$F" --window bench --label final     -o out/bench-daily.png
           for p in out/*.png; do test -s "$p" || { echo "::error::empty $p"; exit 1; }; done
 
+      - name: gb_env column and --title (journals written since bench.py records GB_*)
+        run: |
+          python - <<'PY'
+          import csv
+          with open("tests/fixtures/bench-sample.csv", newline="") as f:
+              rows = list(csv.DictReader(f))
+          with open("out/with-env.csv", "w", newline="") as f:
+              w = csv.DictWriter(f, fieldnames=list(rows[0]) + ["gb_env"])
+              w.writeheader()
+              for r in rows:
+                  w.writerow(dict(r, gb_env="GB_SPARSE=1"))
+          PY
+          python waterfall.py out/with-env.csv --window steady --group-by label \
+            --title "Sparse path (GB_SPARSE=1)" -o out/steady-by-label-env.png
+          test -s out/steady-by-label-env.png
+
       - name: Guard refuses to average different windows
         run: |
           if python waterfall.py tests/fixtures/bench-sample.csv -o out/should-not-exist.png; then

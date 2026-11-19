@@ -177,7 +177,7 @@ def calculate_daily_averages(df: pd.DataFrame, group_by: str = "date") -> pd.Dat
 
     # Window extent (bench.py CSVs; one window per section is guaranteed
     # by the caller unless grouping by label with a --window filter).
-    for col in ("start", "limit", "segment", "window", "label", "commit"):
+    for col in ("start", "limit", "segment", "window", "label", "commit", "gb_env"):
         if col in df.columns:
             daily[col] = grouped[col].agg(
                 lambda v: v.iloc[0] if v.nunique() == 1 else "mixed")
@@ -452,6 +452,9 @@ def draw_waterfall_section(
         extra.append(f"build {row['label']}")
     if "commit" in row and str(row["commit"]) not in ("mixed", "nan"):
         extra.append(str(row["commit"]))
+    env = str(row.get("gb_env", "nan"))
+    if env not in ("nan", ""):         # the run's GB_* settings; "mixed" is worth showing too
+        extra.append(env if len(env) <= 60 else env[:57] + "...")
     if extra:
         right = "  \u00b7  ".join(extra) + "\n" + right
     ax.set_title(right, loc="right", fontsize=9, color="0.25")
@@ -490,6 +493,7 @@ def create_waterfall(
     per: float = 0.0,
     xmax: float = 0.0,
     print_xmax: bool = False,
+    title: str = "",
 ):
     daily = calculate_daily_averages(df, group_by)
 
@@ -596,8 +600,8 @@ def create_waterfall(
     # Main title
     # --------------------------------------------------------
 
-    title = ("GPU Benchmark — Continuous Waterfall by Day" if group_by == "date"
-             else f"GPU Benchmark — Continuous Waterfall by {group_by.capitalize()}")
+    title = title or ("GPU Benchmark — Continuous Waterfall by Day" if group_by == "date"
+                      else f"GPU Benchmark — Continuous Waterfall by {group_by.capitalize()}")
     if subtitle:
         title += f"\n{subtitle}"
 
@@ -695,6 +699,8 @@ def main():
         help="normalize times to this many integers (e.g. 1e10) so windows of different "
              "size share one meaningful scale; 'none' = raw ms; 'auto' (default) = 1e10 "
              "when the plotted windows differ in size")
+    parser.add_argument("--title", default="",
+                        help="main title (default: GPU Benchmark — Continuous Waterfall by ...)")
     parser.add_argument("--latest", action="store_true",
                         help="per label and window, plot only the most recent bench.py session")
     parser.add_argument("--xmax", type=float, default=0.0,
@@ -769,6 +775,7 @@ def main():
         per=per,
         xmax=args.xmax,
         print_xmax=args.print_xmax,
+        title=args.title,
     )
 
 
